@@ -1,0 +1,67 @@
+html {
+	height: 100%;
+	
+}
+
+body {
+	height: calc(100% - 60px);
+	/*margin-top: 60px;*/
+	background-color: #7b8a8b;
+}
+
+.navbar {
+	height: 0px;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+#layout {
+	height: 100%;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#game-window{
+	background-color:green;
+}
+
+#chat-window, #game-window {
+	height: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#chat-panel {
+	height: calc(100% - 70px);
+	margin-top: 0.4em;
+	margin-bottom: 0.4em;
+	padding: 0;
+}
+
+#chat-user-list {
+	height: 15%;
+}
+
+#chat-line-list {
+	height: 85%;
+	/*height: calc(100% - 60px);*/
+	width: 100%;
+	padding: .1em;
+	list-style-type: none;
+	overflow-y: scroll;
+}
+
+#chat-line-list > li {
+	margin: .1em;
+}
+
+#chat-text-input {
+	width: calc(100% - 70px);
+}
+
+#chat-button {
+	width: 65px;
+	float: right;
+}
