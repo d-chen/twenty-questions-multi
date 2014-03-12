@@ -1,0 +1,23 @@
+{
+  "name": "ask20",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./scripts/server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "express": "~3.4.8",
+    "socket.io": "~0.9.16"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@heroku.com:ask20test.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

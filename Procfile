@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath scripts server:app
+web: node ./scripts/server.js
