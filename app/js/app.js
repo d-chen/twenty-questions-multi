@@ -11,7 +11,13 @@ angular.module('myApp', [
   'btford.socket-io'
 ]).
 factory('socket', function (socketFactory) {
-  return socketFactory();
+	var mySocket = io.connect('/',{
+		'force new connection' : true
+	});
+
+  	return socketFactory({
+  		ioSocket: mySocket
+  	});
 });
 //.config(['$routeProvider', function($routeProvider) {
   //$routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});

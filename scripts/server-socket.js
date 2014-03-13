@@ -4,6 +4,7 @@ var userNames = function () {
 
 	// true values for names that already exist
 	names = {};
+	nextGuestId = 1;
 
 
 	// return all names as an array
@@ -18,13 +19,9 @@ var userNames = function () {
 	};
 
 	// claim ownership of name
-	// returns false if name is already claimed even w/ capitalization changes
+	// returns false if name is already claimed
 	var claim = function (name) {
-		if (!name || name.length > MAX_NAME_LENGTH) return false;
-
-		var nameLow = name.toLowerCase();
-
-		if (nameLow === 'server' || names[nameLow]){
+		if (!name || name === 'server' || names[name]){
 			return false;
 		} else {
 			names[name] = true;
@@ -41,7 +38,7 @@ var userNames = function () {
 
 	// create default name for new user
 	var getGuestName = function () {
-		var name, nextGuestId = 1;
+		var name;
 
 		do {
 			name = 'Guest ' + nextGuestId;

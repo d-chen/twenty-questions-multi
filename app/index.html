@@ -35,14 +35,16 @@
 
 	<div class="row" id="layout">
 		<div class="col-xs-9" id="game-window">
-			<h1>more stuff goes in this div</h1>
+			<li ng-repeat="user in users track by $index">
+				{{user}}
+			</li>
 		</div>
 
 
 		<div class="col-xs-3" id="chat-window">
 			<div class="well" id="chat-panel">
 				<ul id="chat-line-list">
-					<li ng-repeat="message in messages">
+					<li ng-repeat="message in messages track by $index">
 						<{{message.user}}> {{message.text}}
 					</li>
 				</ul>

@@ -23,4 +23,3 @@ app.get('/', function(req, res){
 
 // handle socket connections
 io.sockets.on('connection', socket);
-
