@@ -91,7 +91,7 @@ module.exports = function (socket) {
 	// broadcast messages to other users
 	socket.on('sendMessage', function (data) {
 		socket.broadcast.emit('message', {
-			name: name,
+			user: name,
 			text: data.message
 		});
 	});
