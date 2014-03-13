@@ -5,8 +5,9 @@ var app = express();
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 var path = require('path');
+var socket = require('./server-socket');
 
-// variable port for Heroku
+// variable port for Heroku hosting
 var port = Number(process.env.PORT || 5000);
 server.listen(port);
 
@@ -20,21 +21,6 @@ app.get('/', function(req, res){
 	res.sendfile( path.resolve(__dirname + '/../app/index.html') );
 });
 
+// handle socket connections
+io.sockets.on('connection', socket);
 
-
-// websockets
-io.sockets.on('connection', function(socket) {
-	console.log('Socket connected: ' + socket.id);
-
-	socket.emit('message', {data: 'Hello from the server!'});
-
-	socket.on('message', function(msg){
-
-		console.log('Message received: ' + JSON.parse(msg.data));
-	});
-
-	socket.on('disconnect', function(){
-		console.log('Socket disconnected: ' + socket.id);
-		//do something
-	});
-});

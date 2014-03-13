@@ -9,6 +9,10 @@ body {
 	background-color: #7b8a8b;
 }
 
+li {
+	word-wrap: break-word;
+}
+
 .navbar {
 	height: 0px;
 	position: relative;
