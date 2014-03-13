@@ -84,6 +84,7 @@ controller('AppCtrl', function ($scope, socket) {
 		});
 
 		trimMessages();
+		scrollBottom();
 	}
 
 	// reduce message count to MESSAGE_HISTORY
@@ -92,6 +93,12 @@ controller('AppCtrl', function ($scope, socket) {
 		if (overflow > 0){
 			$scope.messages = $scope.messages.slice(overflow);
 		}
+	}
+
+	// scroll to bottom to view new messages
+	var scrollBottom = function () {
+		var $chatList = $('#chat-line-list');
+		$chatList.animate({scrollTop:$chatList[0].scrollHeight});
 	}
 
 
@@ -137,6 +144,7 @@ controller('AppCtrl', function ($scope, socket) {
 		$scope.message = '';
 
 		trimMessages();
+		scrollBottom();
 	};
 
 });
