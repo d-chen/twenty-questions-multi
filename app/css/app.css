@@ -44,13 +44,8 @@ li {
 	padding: 0;
 }
 
-#chat-user-list {
-	height: 15%;
-}
-
 #chat-line-list {
 	height: 100%;
-	/*height: calc(100% - 60px);*/
 	width: 100%;
 	padding: .1em;
 	list-style-type: none;
