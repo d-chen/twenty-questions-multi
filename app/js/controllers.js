@@ -120,10 +120,7 @@ controller('AppCtrl', function ($scope, socket) {
 	$scope.sendMessage = function () {
 		if ($scope.message.length === 0) return;
 		if ($scope.message.length > MAX_MESSAGE_LENGTH){
-			$scope.messages.push({
-				user: 'Server',
-				text: 'Message too long. (Limit: 120 characters)'
-			})
+			pushMessage('Server', 'Message too long. (Limit: 120 characters)');
 			return;
 		}
 
