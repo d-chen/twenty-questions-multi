@@ -22,7 +22,7 @@ controller('AppCtrl', function ($scope, socket) {
 	});
 
 	socket.on('message', function (message) {
-		$scope.messages.push(message);
+		pushMessage(message.user, message.text);
 	});
 
 	socket.on('changeName', function (data) {
@@ -31,19 +31,14 @@ controller('AppCtrl', function ($scope, socket) {
 
 	// add message when user joins room
 	socket.on('userJoin', function (data) {
-		$scope.messages.push({
-			user: 'Server',
-			text: data.name + ' has joined.'
-		});
 		$scope.users.push(data.name);
+
+		var text = data.name + ' has joined.';
+		pushMessage('Server', text);
 	});
 
   	// add a message when a user disconnects
   	socket.on('userLeft', function (data) {
-  		$scope.messages.push({
-  			user: 'Server',
-  			text: data.name + ' has left.'
-  		});
   		var i, user;
   		for (i = 0; i < $scope.users.length; i++) {
   			user = $scope.users[i];
@@ -52,6 +47,9 @@ controller('AppCtrl', function ($scope, socket) {
   				break;
   			}
   		}
+
+  		var text = data.name + ' has left.';
+  		pushMessage('Server', text);
   	});
 
   	/* Helper functions */

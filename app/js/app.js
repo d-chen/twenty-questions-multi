@@ -6,12 +6,15 @@ angular.module('myApp', [
   'ngRoute',
   'myApp.filters',
   'myApp.controllers',
+  'myApp.directives',
+  'myApp.services',
 
   //third party dependency
   'btford.socket-io'
 ]).
 factory('socket', function (socketFactory) {
 	var mySocket = io.connect('/',{
+		// run multiple clients
 		'force new connection' : true
 	});
 
