@@ -5,7 +5,7 @@
 angular.module('myApp.controllers', ['btford.socket-io']).
 controller('AppCtrl', function ($scope, socket) {
 
-	var MAX_NAME_LENGTH = 16;
+	var MAX_NAME_LENGTH = 15;
 	var MAX_MESSAGE_LENGTH = 120;
 	var MESSAGE_HISTORY = 75;
 	$scope.messages = [];
@@ -57,7 +57,8 @@ controller('AppCtrl', function ($scope, socket) {
 	// rename user within user list
 	var changeName = function (oldName, newName) {
 		if (newName.length > MAX_NAME_LENGTH){
-			alert('Please choose a shorter name. (16 characters)');
+			var text = 'Please choose a shorter name. Limit: ' + MAX_NAME_LENGTH + ' characters';
+			alert(text);
 			return;
 			$scope.newName = $scope.name;
 		}
@@ -120,7 +121,8 @@ controller('AppCtrl', function ($scope, socket) {
 	$scope.sendMessage = function () {
 		if ($scope.message.length === 0) return;
 		if ($scope.message.length > MAX_MESSAGE_LENGTH){
-			pushMessage('Server', 'Message too long. (Limit: 120 characters)');
+			var text = 'Message too long. Limit: ' + MAX_MESSAGE_LENGTH + ' characters';
+			pushMessage('Server', text);
 			return;
 		}
 

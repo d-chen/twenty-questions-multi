@@ -36,8 +36,8 @@ li {
 	float: right;
 	list-style-type: none;
 	list-style-position: inside;
-	overflow-y: scroll;
-	width: 20%;
+	overflow-y: auto;
+	width: 25%;
 }
 
 #user-list li {	
