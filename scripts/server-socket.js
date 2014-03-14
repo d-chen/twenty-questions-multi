@@ -1,6 +1,7 @@
 var userNames = function () {
 
 	var MAX_NAME_LENGTH = 15;
+	var MAX_MESSAGE_LENGTH = 120;
 
 	// true values for names that already exist
 	var names = {};
@@ -169,6 +170,9 @@ module.exports = function (socket) {
 
 	// broadcast messages to other users
 	socket.on('sendMessage', function (data) {
+		if (data.message.length > MAX_MESSAGE_LENGTH) {
+			return;
+		}
 		socket.broadcast.emit('message', {
 			user: name,
 			text: data.message
