@@ -20,29 +20,67 @@ li {
 	padding: 0;
 }
 
+.panel {
+	width: 100%;
+}
+
+.panel-primary {
+	background-color: #2C3E50;
+}
+
+.panel-primary li, .panel-primary p, .panel-primary span {
+	color: #ffffff;
+}
+
 #layout {
 	height: 100%;
+	width: 100%;
 	margin-left: 0px;
 	margin-right: 0px;
 }
 
-#info-panel{
-	height: 30%;
-	background-color: red;
+#top-row {
+	height: calc(30% - 75px);
+	margin-top: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#game-info-col {
+	height: 100%;
+	padding-left: 0px;
+	padding-right: 5px;
+}
+
+#user-col {
+	height: 100%;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+#game-info-panel, #user-panel {
+	height: 100%;
+	width: 100%;
 }
 
 #user-list{
 	height: 100%;
-	float: right;
+	width: 100%;
 	list-style-type: none;
 	list-style-position: inside;
 	overflow-y: auto;
-	width: 25%;
+	padding: 0;
 }
 
 #user-list li {	
 	font-size: 0.9em;
-	text-align: right;
+	text-align: center;
+}
+
+#questions-panel {
+	height: calc(70%);
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 #chat-window, #game-window {
@@ -50,12 +88,14 @@ li {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 #chat-panel {
 	height: calc(100% - 70px);
-	margin-top: 0.4em;
-	margin-bottom: 0.4em;
+	margin-top: 5px;
+	margin-bottom: 5px;
 	padding: 0;
 }
 

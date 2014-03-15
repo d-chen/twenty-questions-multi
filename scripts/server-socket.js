@@ -1,7 +1,6 @@
 var userNames = function () {
 
 	var MAX_NAME_LENGTH = 15;
-	var MAX_MESSAGE_LENGTH = 120;
 
 	// true values for names that already exist
 	var names = {};
@@ -141,6 +140,7 @@ var gameState = function () {
 }( );
 
 module.exports = function (socket) {
+	var MAX_MESSAGE_LENGTH = 120;
 
 	// generate name for new connection
 	var name = userNames.getGuestName();

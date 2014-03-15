@@ -12,9 +12,11 @@ var port = Number(process.env.PORT || 5000);
 server.listen(port);
 
 // serve static resources
-app.use('/css', express.static( path.resolve(__dirname + '/../app/css')));
-app.use('/lib', express.static( path.resolve(__dirname + '/../app/lib')));
-app.use('/js', express.static( path.resolve(__dirname + '/../app/js')));
+var static_dir = path.resolve(__dirname + '/../app');
+app.use('/css', express.static( static_dir + '/css'));
+app.use('/fonts', express.static( static_dir + '/fonts'));
+app.use('/lib', express.static( static_dir + '/lib'));
+app.use('/js', express.static( static_dir + '/js'));
 
 // routing
 app.get('/', function(req, res){

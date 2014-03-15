@@ -33,36 +33,50 @@
 		</div>
 	</div>
 
-	<div class="row" id="layout">
-		<div class="col-xs-9" id="game-window">
-			<div class="row panel panel-primary" id="info-panel">
+	<div id="layout">
+		<div class="col-sm-9" id="game-window">
+			<div class="row" id="top-row">
+
+				<div class="col-sm-9" id="game-info-col">
+					<div class="panel panel-primary" id="game-info-panel">
+						<span class="glyphicon glyphicon-ok"></span>
+						<span class="glyphicon glyphicon-remove"></span>
+						<span class="glyphicon glyphicon-trash"></span>
+					</div>
+				</div>
+
+				<div class="col-sm-3" id="user-col">
+					<div class="panel panel-primary" id="user-panel">
+						<ul id="user-list">
+							<li><b>Users:</b></li>
+							<li ng-repeat="user in users" ng-bind="user"></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+
+			<!--<div class="panel panel-primary" id="info-panel">
+			</div>
+			-->
+			
+			<div class="panel panel-primary" id="questions-panel">
 				
-					hey
-				
-				<div class="panel-body">
-					<ul id="user-list">
-						<li ng-repeat="user in users" ng-bind="user"></li>
-					</ul>
+			</div>
+
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">Question:</span>
+					<input type="text" class="form-control">
+					<span class="input-group-btn">
+						<button class="btn btn-primary" type="button">Ask</button>
+					</span>
 				</div>
 			</div>
-			
-			<div class="row" style="background-color:yellow">
-				hey
-			</li>
-			</div>
 
-			<div class="row" style="background-color:green">
-				hey
-			</li>
-			</div>
-
-			<div class="row" style="background-color:purple">
-				hey
-			</li>
-			</div>
 		</div>
 
-		<div class="col-xs-3" id="chat-window">
+		<div class="col-sm-3" id="chat-window">
 			<div class="well" id="chat-panel">
 				<ul id="chat-line-list">
 					<li ng-repeat="message in messages track by $index">
