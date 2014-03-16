@@ -261,8 +261,8 @@ module.exports = function (socket) {
 	socket.on('sendQuestion', function (data) {
 		var question = gameState.addQuestion(name, data.question);
 
-		socket.emit('newQuestion', question);
-		socket.broadcast.emit('newQuestion', question);
+		socket.emit('addQuestion', question);
+		socket.broadcast.emit('addQuestion', question);
 	});
 
 	socket.on('answerQuestion', function (data) {

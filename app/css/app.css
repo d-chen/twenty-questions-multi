@@ -63,7 +63,7 @@ li {
 	width: 100%;
 }
 
-#user-list{
+#game-info-list, #user-list{
 	height: 100%;
 	width: 100%;
 	list-style-type: none;

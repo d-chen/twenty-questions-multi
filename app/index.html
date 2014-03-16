@@ -23,7 +23,7 @@
 				</ul>
 
 				<form class="navbar-form navbar-right" ng-submit="changeName()">
-					<input id="name-input" class="form-control input-sm" type="text" ng-model="newName"/>
+					<input id="name-input" class="form-control input-sm" type="text" placeholder="Name" ng-model="newName"/>
 
 					<button id="name-button" type="submit" class="btn btn-sm btn-default">Set Name</button>
 
@@ -39,9 +39,12 @@
 
 				<div class="col-sm-9" id="game-info-col">
 					<div class="panel panel-primary" id="game-info-panel">
-						<span class="glyphicon glyphicon-ok"></span>
-						<span class="glyphicon glyphicon-remove"></span>
-						<span class="glyphicon glyphicon-trash"></span>
+						<ul id="game-info-list">
+							<li>Host: {{host}}</li>
+							<li>Game started: {{gameStarted}}</li>
+							<li>Secret Hint: {{secretHint}}</li>
+							<li>Questions Remaining: {{questionsLeft}} </li>
+						</ul>
 					</div>
 				</div>
 
@@ -57,7 +60,9 @@
 			</div>
 
 			<div class="panel panel-primary" id="questions-panel">
-				
+				<span class="glyphicon glyphicon-ok"></span>
+				<span class="glyphicon glyphicon-remove"></span>
+				<span class="glyphicon glyphicon-trash"></span>
 			</div>
 
 			<form class="form-group" ng-submit="sendQuestion()">

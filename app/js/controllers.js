@@ -10,12 +10,20 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	var MESSAGE_HISTORY = 75;
 	$scope.messages = [];
 
+	/* Bind to gameService */
+	$scope.$watch( function (){ return gameService.getAll(); }, function (newVal, oldVal) {
+		$scope.host = newVal.host;
+		$scope.gameStarted = newVal.gameStarted;
+		$scope.secretHint = newVal.secretHint;
+		$scope.questionsList = newVal.questionsList;
+		$scope.questionsLeft = newVal.questionsLeft;
+	}, true);
+
+
 	/* Socket listeners */
 	socket.on('init', function (data){
 		$scope.name = data.name;
 		$scope.users = data.users;
-
-		$scope.newName = data.name;
 
 		//init game logic as well
 
@@ -53,7 +61,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
   	});
 
 
-  	socket.on('newQuestion', function (data) {
+  	socket.on('addQuestion', function (data) {
   		gameService.addQuestion(data);
   	});
 
@@ -79,7 +87,6 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 			var text = 'Please choose a shorter name. Limit: ' + MAX_NAME_LENGTH + ' characters';
 			alert(text);
 			return;
-			$scope.newName = $scope.name;
 		}
 
 		var i;
@@ -128,7 +135,6 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		}, function (result){
 			if (!result) {
 				alert('Error: Name is already in use.');
-				$scope.newName = $scope.name;
 			} else {
 				changeName($scope.name, $scope.newName);
 

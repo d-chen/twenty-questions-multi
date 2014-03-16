@@ -15,6 +15,16 @@ service('gameService', function (socket) {
 	var secretObject = '';
 
 	return {
+		getAll: function () {
+			return {
+				host: host,
+				gameStarted: gameStarted,
+				secretHint: secretHint,
+				questionList: questionList,
+				questionsLeft: questionsLeft
+			}
+		},
+
 		getHost: function () { return host; },
 		getGameStarted: function () { return gameStarted; },
 		getSecretHint: function () { return secretHint; },
