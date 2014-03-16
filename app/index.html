@@ -27,7 +27,7 @@
 
 					<button id="name-button" type="submit" class="btn btn-sm btn-default">Set Name</button>
 
-					<button id="host-button" type="button" class="btn btn-sm btn-default">Become Host</button>
+					<button id="host-button" type="button" class="btn btn-sm btn-default" ng-disabled="host">Become Host</button>
 				</form>
 			</div>
 		</div>
@@ -56,23 +56,19 @@
 
 			</div>
 
-			<!--<div class="panel panel-primary" id="info-panel">
-			</div>
-			-->
-			
 			<div class="panel panel-primary" id="questions-panel">
 				
 			</div>
 
-			<div class="form-group">
+			<form class="form-group" ng-submit="sendQuestion()">
 				<div class="input-group">
 					<span class="input-group-addon">Question:</span>
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" ng-model="newQuestion" ng-disabled="FALSE">
 					<span class="input-group-btn">
-						<button class="btn btn-primary" type="button">Ask</button>
+						<button class="btn btn-primary" type="button" ng-disabled="FALSE">Ask</button>
 					</span>
 				</div>
-			</div>
+			</form>
 
 		</div>
 

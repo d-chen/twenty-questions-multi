@@ -2,8 +2,8 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', ['btford.socket-io']).
-controller('AppCtrl', function ($scope, socket) {
+angular.module('myApp.controllers', ['btford.socket-io','myApp.services']).
+controller('AppCtrl', function ($scope, socket, gameService) {
 
 	var MAX_NAME_LENGTH = 15;
 	var MAX_MESSAGE_LENGTH = 120;
@@ -50,6 +50,25 @@ controller('AppCtrl', function ($scope, socket) {
 
   		var text = data.name + ' has left.';
   		pushMessage('Server', text);
+  	});
+
+
+  	socket.on('newQuestion', function (data) {
+  		gameService.addQuestion(data);
+  	});
+
+  	socket.on('answerQuestion', function (data) {
+  		var questionObj = gameService.answerQuestion(data.id, data.answer);
+
+  		var host = gameService.getHost();
+  		var response = data.answer ? "YES" : "NO";
+  		var text = response + " to '" + questionObj.question + "'";
+
+  		pushMessage(host, text);
+  	});
+
+  	socket.on('deleteQuestion', function (data) {
+  		gameService.deleteQuestion(data.id);
   	});
 
   	/* Helper functions */
@@ -132,16 +151,20 @@ controller('AppCtrl', function ($scope, socket) {
 		});
 
 		// add message to local model
-		$scope.messages.push({
-			user: $scope.name,
-			text: $scope.message
-		});
+		pushMessage($scope.name, $scope.message);
 
 		// clear message box after submission
 		$scope.message = '';
+	};
 
-		trimMessages();
-		scrollBottom();
+	$scope.sendQuestion = function () {
+		if ($scope.newQuestion.length === 0) return;
+
+		socket.emit('sendQuestion', {
+			question: $scope.newQuestion
+		});
+
+		$scope.newQuestion = '';
 	};
 
 });

@@ -73,7 +73,7 @@ var gameState = function () {
 
 	// return game data to send to new users
 	// or at the start of the game
-	var get = function () {
+	var getGame = function () {
 		return {
 			host: host,
 			gameStarted: gameStarted,
@@ -81,6 +81,10 @@ var gameState = function () {
 			questionList: questionList,
 			questionsLeft: questionsLeft
 		};
+	};
+
+	var getHost = function () {
+		return host;
 	};
 
 	// host sends hint and secret object to begin game
@@ -116,25 +120,53 @@ var gameState = function () {
 		host = '';
 	};
 
-	// add question to server's copy of game
-	var addQuestion = function (question) {
+	// create question in server's copy of game
+	var addQuestion = function (user, question) {
+		var qid = nextQuestionId;
+		nextQuestionId += 1;
 
+		var newQ = {
+			id: qid,
+			user: user,
+			question: question,
+			isAnswered: false
+		};
+
+		questionList.push(newQ);
+		questionsLeft -= 1;
+		return newQ;
 	};
 
 	var answerQuestion = function (qid, answer) {
 		var i;
 		for (i = 0; i < questionList.length; i++){
-			if (questionList[i]);
+			if (questionList[i] === qid){
+				questionList[i].answer = answer;
+				questionList[i].isAnswered = true;
+				return;
+			}
+		}
+	};
+
+	var deleteQuestion = function (qid) {
+		var i;
+		for (i = 0; i < questionList.length; i++){
+			if (questionList[i].id === qid){
+				questionList.splice(i, 1);
+			}
 		}
 	};
 
 	return {
-		get: get,
+		getGame: getGame,
+		getHost: getHost,
 		claimHost: claimHost,
 		freeHost: freeHost,
 		initGame: initGame,
-		resetGame: resetGame
-
+		resetGame: resetGame,
+		addQuestion: addQuestion,
+		answerQuestion: answerQuestion,
+		deleteQuestion: deleteQuestion
 	}
 
 }( );
@@ -160,6 +192,7 @@ module.exports = function (socket) {
 	});
 
 	// free up name when user disconnects, broadcast to other users
+	// additional case where host disconnects, reset game
 	socket.on('disconnect', function (){
 		socket.broadcast.emit('userLeft',{
 			name: name
@@ -195,6 +228,56 @@ module.exports = function (socket) {
 			response(true);
 		} else {
 			response(false);
+		}
+	});
+
+
+	/* 	Game events 
+	*	Update server state, then broadcast change to users
+	*/
+
+	socket.on('claimHost', function (data, response) {
+
+	});
+
+	socket.on('freeHost', function (data) {
+		if (name === getHost()){
+
+		}
+	});
+
+	socket.on('initGame', function (data) {
+		if (name === getHost()){
+
+		}
+	});
+
+	socket.on('resetGame', function (data) {
+		if (name === getHost()){
+
+		}
+	});
+
+	socket.on('sendQuestion', function (data) {
+		var question = gameState.addQuestion(name, data.question);
+
+		socket.emit('newQuestion', question);
+		socket.broadcast.emit('newQuestion', question);
+	});
+
+	socket.on('answerQuestion', function (data) {
+		if (name === getHost()){
+			gameState.answerQuestion(data.id, data.answer);
+
+			socket.broadcast.emit('answerQuestion', data);
+		}
+	});
+
+	socket.on('deleteQuestion', function (data) {
+		if (name === getHost()){
+			gameState.deleteQuestion(data.id);
+
+			socket.broadcast.emit('deleteQuestion', data);
 		}
 	});
 

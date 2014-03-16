@@ -13,10 +13,7 @@ server.listen(port);
 
 // serve static resources
 var static_dir = path.resolve(__dirname + '/../app');
-app.use('/css', express.static( static_dir + '/css'));
-app.use('/fonts', express.static( static_dir + '/fonts'));
-app.use('/lib', express.static( static_dir + '/lib'));
-app.use('/js', express.static( static_dir + '/js'));
+app.use(express.static(static_dir));
 
 // routing
 app.get('/', function(req, res){
