@@ -13,13 +13,13 @@
 	<div class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#">20 Questions</a>
+				<a class="navbar-brand" href="#"><b>20 Questions</b></a>
 			</div>
 
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="#">How to Play</a></li>
-					<li><a href="#">Contact</a></li>
+					<!--<li><a href="#">About</a></li>-->
+					<!--<li><a href="#">Contact</a></li>-->
 				</ul>
 
 				<form class="navbar-form navbar-right" ng-submit="changeName()">
@@ -38,27 +38,36 @@
 	<div id="layout">
 		<div class="col-sm-9" id="game-window">
 			<div class="row" id="top-row">
-
 				<div class="col-sm-9" id="game-info-col">
-					<div class="panel panel-primary" id="game-info-panel">
-						<ul id="game-info-list">
-							<li><b>Host:</b> <span ng-bind="host | hostStatus"/></li>
-							<li><b>Game status:</b> <span ng-bind="gameStarted | gameStatus"/></li>
-							<li><b>Secret Topic:</b> <span ng-bind="secretHint | hintStatus"/></li>
-							<li><b>Questions Remaining:</b> <span ng-bind="questionsLeft"/></li>
-						</ul>
+				<div class="panel panel-primary" id="game-info-panel">
+					<ul id="game-info-list">
+						<li><b>Host:</b> <span ng-bind="host | hostStatus"/></li>
+						<li><b>Game status:</b> <span ng-bind="gameStarted | gameStatus"/></li>
+						<li><b>Secret Topic:</b> <span ng-bind="secretHint | hintStatus"/></li>
+						<li><b>Questions Remaining:</b> <span ng-bind="questionsLeft"/></li>
+					</ul>
+
+					<div id="host-controls">
+					<form class="form-group">
+						<input type="text" ng-model="newSecretHint" ng-hide="isNotHost" ng-disabled="cantSetSecret" placeholder="Category / Hint">
+						<button class="btn btn-default" type='button' ng-hide="isNotHost" ng-disabled="cantSetSecret" ng-click="startGame()">Start Game</button>
+					</form>
+					<form class="form-group"> 
+						<input type="text" ng-model="newSecretObject" ng-hide="isNotHost" ng-disabled="cantSetSecret" placeholder="Secret Subject">
+						<button class="btn btn-default" type='button' ng-hide="isNotHost" ng-disabled="!gameStarted" ng-click="endGame()">End Game</button>
+					</form>
 					</div>
+				</div>
 				</div>
 
 				<div class="col-sm-3" id="user-col">
-					<div class="panel panel-primary" id="user-panel">
-						<ul id="user-list">
-							<li><b>Users:</b></li>
-							<li ng-repeat="user in users" ng-bind="user"></li>
-						</ul>
-					</div>
+				<div class="panel panel-primary" id="user-panel">
+					<ul id="user-list">
+						<li><b>Users:</b></li>
+						<li ng-repeat="user in users" ng-bind="user"></li>
+					</ul>
 				</div>
-
+				</div>
 			</div>
 
 			<!--<span class="glyphicon glyphicon-ok"></span>
@@ -72,6 +81,7 @@
 				</ul>
 			</div>
 
+			<div id="host-panel">
 			<form class="form-group" ng-submit="sendQuestion()">
 				<div class="input-group">
 					<span class="input-group-addon">Question:</span>
@@ -81,6 +91,7 @@
 					</span>
 				</div>
 			</form>
+			</div>
 
 		</div>
 

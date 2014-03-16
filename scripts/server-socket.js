@@ -88,13 +88,23 @@ var gameState = function () {
 	};
 
 	// host sends hint and secret object to begin game
-	var initGame = function (hint, object) {
+	var startGame = function (hint, object) {
 		secretHint = hint;
 		secretObject = object;
 		gameStarted = true;
 	};
 
-	// reset game state at end or when host disconnects
+	// reset game state when host ends game manually or game finishes
+	var endGame = function () {
+		gameStarted = false;
+		secretHint = '';
+		secretObject = '';
+		questionList = [];
+		questionsLeft = 20;
+		nextQuestionId = 1;
+	};
+
+	// reset game state when host disconnects
 	var resetGame = function () {
 		host = '';
 		gameStarted = false;
@@ -103,7 +113,7 @@ var gameState = function () {
 		questionList = [];
 		questionsLeft = 20;
 		nextQuestionId = 1;
-	}
+	};
 
 	// claim host position; return false if already occupied
 	var claimHost = function (name) {
@@ -162,12 +172,13 @@ var gameState = function () {
 		getHost: getHost,
 		claimHost: claimHost,
 		freeHost: freeHost,
-		initGame: initGame,
+		startGame: startGame,
+		endGame: endGame,
 		resetGame: resetGame,
 		addQuestion: addQuestion,
 		answerQuestion: answerQuestion,
 		deleteQuestion: deleteQuestion
-	}
+	};
 
 }( );
 
@@ -200,14 +211,13 @@ module.exports = function (socket) {
 
 		// additional case for when host disconnects
 		if (gameState.getHost() === name){
-			gameState.freeHost();
-
-			var dataObj = { 
-				name: name
-			 };
-
-			socket.emit('freeHost', dataObj);
-			socket.broadcast.emit('freeHost', dataObj);
+			if (gameState.getGame().gameStarted === true){
+				gameState.resetGame();
+				socket.broadcast.emit('resetGame', {name: name});
+			} else {
+				gameState.freeHost();
+				socket.broadcast.emit('freeHost', {name: name});
+			}
 		}
 	});
 
@@ -272,15 +282,17 @@ module.exports = function (socket) {
 		}
 	});
 
-	socket.on('initGame', function (data) {
+	socket.on('startGame', function (data) {
 		if (name === gameState.getHost()){
-
+			gameState.startGame(data.secretHint, data.secretObject);
+			socket.broadcast.emit('startGame', { secretHint: data.secretHint });
 		}
 	});
 
-	socket.on('resetGame', function (data) {
+	socket.on('endGame', function (data) {
 		if (name === gameState.getHost()){
-
+			gameState.endGame();
+			socket.broadcast.emit('endGame', { secretObject: data.secretObject });
 		}
 	});
 

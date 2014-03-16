@@ -18,12 +18,14 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		$scope.secretHint = newVal.secretHint;
 		$scope.questionsList = newVal.questionsList;
 		$scope.questionsLeft = newVal.questionsLeft;
+		$scope.secretObject = newVal.secretObject;
 
-		// Values to control host-button, unhost-button, question-form
+		// Values to disable buttons
 		$scope.hostExists = $scope.host ? true : false;
 		$scope.cantBecomeHost = $scope.hostExists || $scope.notInit;
 		$scope.isNotHost = $scope.host !== $scope.name;
-		$scope.cantAskQuestions = (!$scope.gameStarted) || $scope.isHost || ($scope.questionsLeft <= 0);
+		$scope.cantAskQuestions = (!$scope.gameStarted) || !$scope.isNotHost || ($scope.questionsLeft <= 0);
+		$scope.cantSetSecret = $scope.isNotHost || $scope.gameStarted;
 	}, true);
 
 
@@ -52,7 +54,6 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
 	socket.on('userJoin', function (data) {
 		$scope.users.push(data.name);
-		pushMessage('Server', data.name + ' has joined.');
 	});
 
   	socket.on('userLeft', function (data) {
@@ -61,7 +62,6 @@ controller('AppCtrl', function ($scope, socket, gameService) {
   			user = $scope.users[i];
   			if (user === data.name) {
   				$scope.users.splice(i, 1);
-  				pushMessage('Server', data.name + ' has left');
   				break;
   			}
   		}
@@ -75,6 +75,21 @@ controller('AppCtrl', function ($scope, socket, gameService) {
   	socket.on('freeHost', function (data) {
   		gameService.changeHost('');
   		pushMessage('Server', data.name + ' has stopped hosting.');
+  	});
+
+  	socket.on('startGame', function (data) {
+  		gameService.startGame(data);
+  		pushMessage('Server', 'Game has started. The topic is: "' + data.secretHint + '"');
+  	});
+
+  	socket.on('endGame', function (data) {
+  		pushMessage('Server', 'Game ended. The answer was "' + data.secretObject + '"');
+  		gameService.endGame();
+  	});
+
+  	socket.on('resetGame', function (data) {
+  		gameService.resetGame();
+  		pushMessage('Server', data.name + ' has disconnected. Game reset.');
   	});
 
   	socket.on('addQuestion', function (data) {
@@ -208,6 +223,28 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
 	$scope.freeHost = function () {
 		socket.emit('freeHost', {});
+	};
+
+	$scope.startGame = function () {
+		if (!$scope.newSecretHint || !$scope.newSecretObject){
+			alert('Please fill in both the hint and secret answer.');
+			return;
+		}
+
+		var data = {
+			secretHint: $scope.newSecretHint,
+			secretObject: $scope.newSecretObject
+		};
+
+		gameService.startGame(data);
+		pushMessage('Server', 'Game has started. The topic is: "' + data.secretHint + '"');
+		socket.emit('startGame', data);
+	};
+
+	$scope.endGame = function () {
+		pushMessage('Server', 'Game ended. The answer was "' + $scope.secretObject + '"');
+		socket.emit('endGame', {secretObject: $scope.secretObject});
+		gameService.endGame();
 	};
 
 });

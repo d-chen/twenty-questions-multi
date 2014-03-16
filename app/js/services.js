@@ -21,7 +21,8 @@ service('gameService', function (socket) {
 				gameStarted: gameStarted,
 				secretHint: secretHint,
 				questionList: questionList,
-				questionsLeft: questionsLeft
+				questionsLeft: questionsLeft,
+				secretObject: secretObject
 			}
 		},
 
@@ -33,12 +34,30 @@ service('gameService', function (socket) {
 			questionsLeft = data.questionsLeft;
 		},
 
-		getHost: function () { return host; },
-		getGameStarted: function () { return gameStarted; },
-		getSecretHint: function () { return secretHint; },
-		getQuestionList: function () { return questionList; },
-		getQuestionsLeft: function () { return questionsLeft; },
+		startGame: function (data) {
+			gameStarted = true;
+			secretHint = data.secretHint;
+			if (data.secretObject){ secretObject = data.secretObject; }
+		},
 
+		// used when host prematurely ends game or game finishes
+		endGame: function () {
+			gameStarted = false;
+			secretHint = '';
+			secretObject = '';
+			questionList = [];
+			questionsLeft = 20;
+		},
+
+		// used for when host disconnects
+		resetGame: function () {
+			host = '';
+			gameStarted = false;
+			secretHint = '';
+			secretObject = '';
+			questionList = [];
+			questionsLeft = 20;
+		},
 
 		changeHost: function (hostName) { 
 			host = hostName; 
