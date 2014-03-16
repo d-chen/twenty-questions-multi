@@ -11,8 +11,28 @@ appFilters.filter('interpolate', ['version', function(version) {
   }]);
 
 
+appFilters.filter('hostStatus', function() {
+	return function (name){
+		return (name) ? name : "<No Current Host>";
+	}
+});
+
+appFilters.filter('gameStatus', function() {
+	return function (bool){
+		return (bool) ? "Game started." : "Awaiting host." ;
+	};
+});
+
+appFilters.filter('hintStatus', function() {
+	return function (hint){
+		return (hint) ? hint : "..." ;
+	}
+});
+
+
 appFilters.filter('isAnswered', function() {
 	return function (questArr, answered){
+		if (!questArr) return;
 		var output = [];
 		var i;
 

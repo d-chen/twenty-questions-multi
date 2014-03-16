@@ -9,6 +9,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	var MAX_MESSAGE_LENGTH = 120;
 	var MESSAGE_HISTORY = 75;
 	$scope.messages = [];
+	$scope.notInit = true;
 
 	/* Bind to gameService */
 	$scope.$watch( function (){ return gameService.getAll(); }, function (newVal, oldVal) {
@@ -17,6 +18,12 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		$scope.secretHint = newVal.secretHint;
 		$scope.questionsList = newVal.questionsList;
 		$scope.questionsLeft = newVal.questionsLeft;
+
+		// Values to control host-button, unhost-button, question-form
+		$scope.hostExists = $scope.host ? true : false;
+		$scope.cantBecomeHost = $scope.hostExists || $scope.notInit;
+		$scope.isNotHost = $scope.host !== $scope.name;
+		$scope.cantAskQuestions = (!$scope.gameStarted) || $scope.isHost || ($scope.questionsLeft <= 0);
 	}, true);
 
 
@@ -25,8 +32,14 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		$scope.name = data.name;
 		$scope.users = data.users;
 
-		//init game logic as well
+		// Enable buttons
+		$scope.notInit = false;
+		$scope.cantBecomeHost = $scope.hostExists;
 
+		pushMessage('Server', 'You have joined as ' + $scope.name + '.');
+
+		//init game logic as well
+		gameService.setAll(data.game);
 	});
 
 	socket.on('message', function (message) {
@@ -37,29 +50,32 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		changeName(data.oldName, data.newName);
 	});
 
-	// add message when user joins room
 	socket.on('userJoin', function (data) {
 		$scope.users.push(data.name);
-
-		var text = data.name + ' has joined.';
-		pushMessage('Server', text);
+		pushMessage('Server', data.name + ' has joined.');
 	});
 
-  	// add a message when a user disconnects
   	socket.on('userLeft', function (data) {
   		var i, user;
   		for (i = 0; i < $scope.users.length; i++) {
   			user = $scope.users[i];
   			if (user === data.name) {
   				$scope.users.splice(i, 1);
+  				pushMessage('Server', data.name + ' has left');
   				break;
   			}
   		}
-
-  		var text = data.name + ' has left.';
-  		pushMessage('Server', text);
   	});
 
+  	socket.on('changeHost', function (data) {
+  		gameService.changeHost(data.name);
+  		pushMessage('Server', data.name + ' has become the game host.');
+  	});
+
+  	socket.on('freeHost', function (data) {
+  		gameService.changeHost('');
+  		pushMessage('Server', data.name + ' has stopped hosting.');
+  	});
 
   	socket.on('addQuestion', function (data) {
   		gameService.addQuestion(data);
@@ -93,13 +109,11 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		for (i = 0; i < $scope.users.length; i++){
 			if ($scope.users[i] === oldName) {
 				$scope.users[i] = newName;
+				pushMessage('Server', oldName + ' is now known as ' + newName + '.');
 				break;
 			}
 		}
-
-		var text = oldName + ' changed name to ' + newName + '.';
-		pushMessage('Server', text);
-	}
+	};
 
 	// add message to list, prune as needed
 	var pushMessage = function (myUser, myText){
@@ -110,7 +124,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
 		trimMessages();
 		scrollBottom();
-	}
+	};
 
 	// reduce message count to MESSAGE_HISTORY
 	var trimMessages = function () {
@@ -118,13 +132,13 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		if (overflow > 0){
 			$scope.messages = $scope.messages.slice(overflow);
 		}
-	}
+	};
 
 	// scroll to bottom to view new messages
 	var scrollBottom = function () {
 		var $chatList = $('#chat-line-list');
 		$chatList.animate({scrollTop:$chatList[0].scrollHeight});
-	}
+	};
 
 
 	/* Methods available to scope */
@@ -166,11 +180,34 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	$scope.sendQuestion = function () {
 		if ($scope.newQuestion.length === 0) return;
 
-		socket.emit('sendQuestion', {
-			question: $scope.newQuestion
-		});
+		socket.emit('sendQuestion', { question: $scope.newQuestion });
 
 		$scope.newQuestion = '';
+	};
+
+	$scope.answerQuestion = function (qid, ans) {
+		var answerObj = {
+			id: qid,
+			answer: ans
+		};
+
+		gameService.answerQuestion(answerObj);
+
+		socket.emit('answerQuestion', answerObj);
+	};
+
+	$scope.deleteQuestion = function (qid) {
+		gameService.deleteQuestion(qid);
+
+		socket.emit('deleteQuestion', { id: qid });
+	};
+
+	$scope.claimHost = function () {
+		socket.emit('claimHost', {});
+	};
+
+	$scope.freeHost = function () {
+		socket.emit('freeHost', {});
 	};
 
 });

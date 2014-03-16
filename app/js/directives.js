@@ -2,7 +2,18 @@
 
 /* Directives */
 
-angular.module('myApp.directives', []).
-directive('questionList', function () {
+var appDirectives = angular.module('myApp.directives', []);
+
+appDirectives.directive('pendingQuestionList', function () {
+	return {
+		restrict: 'E',
+		
+		templateUrl: '/partials/pendingQuestionsList.html',
+		replace: true,
+
+		scope: {
+
+		}
+	}
 
 });

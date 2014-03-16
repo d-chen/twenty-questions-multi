@@ -178,12 +178,11 @@ module.exports = function (socket) {
 	var name = userNames.getGuestName();
 
 	// send user their default name and list of users
-	// include current game state
+	// update them with current game state
 	socket.emit('init',{
 		name: name,
-		users: userNames.getNames()
-
-		//game state
+		users: userNames.getNames(),
+		game: gameState.getGame()
 	});
 
 	// notify other users that user has joined
@@ -192,13 +191,24 @@ module.exports = function (socket) {
 	});
 
 	// free up name when user disconnects, broadcast to other users
-	// additional case where host disconnects, reset game
 	socket.on('disconnect', function (){
 		socket.broadcast.emit('userLeft',{
 			name: name
 		});
 
 		userNames.free(name);
+
+		// additional case for when host disconnects
+		if (gameState.getHost() === name){
+			gameState.freeHost();
+
+			var dataObj = { 
+				name: name
+			 };
+
+			socket.emit('freeHost', dataObj);
+			socket.broadcast.emit('freeHost', dataObj);
+		}
 	});
 
 	// broadcast messages to other users
@@ -237,23 +247,39 @@ module.exports = function (socket) {
 	*/
 
 	socket.on('claimHost', function (data, response) {
+		if (gameState.claimHost(name)){
 
+			var dataObj = { name: name };
+			socket.emit('changeHost', dataObj);
+			socket.broadcast.emit('changeHost', dataObj);
+
+			response(true);
+		} else {
+			response(false);
+		}
 	});
 
 	socket.on('freeHost', function (data) {
-		if (name === getHost()){
+		if (name === gameState.getHost()){
+			gameState.freeHost();
 
+			var dataObj = { 
+				name: name
+			 };
+
+			socket.emit('freeHost', dataObj);
+			socket.broadcast.emit('freeHost', dataObj);
 		}
 	});
 
 	socket.on('initGame', function (data) {
-		if (name === getHost()){
+		if (name === gameState.getHost()){
 
 		}
 	});
 
 	socket.on('resetGame', function (data) {
-		if (name === getHost()){
+		if (name === gameState.getHost()){
 
 		}
 	});
@@ -266,7 +292,7 @@ module.exports = function (socket) {
 	});
 
 	socket.on('answerQuestion', function (data) {
-		if (name === getHost()){
+		if (name === gameState.getHost()){
 			gameState.answerQuestion(data.id, data.answer);
 
 			socket.broadcast.emit('answerQuestion', data);
@@ -274,7 +300,7 @@ module.exports = function (socket) {
 	});
 
 	socket.on('deleteQuestion', function (data) {
-		if (name === getHost()){
+		if (name === gameState.getHost()){
 			gameState.deleteQuestion(data.id);
 
 			socket.broadcast.emit('deleteQuestion', data);

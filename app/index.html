@@ -25,9 +25,11 @@
 				<form class="navbar-form navbar-right" ng-submit="changeName()">
 					<input id="name-input" class="form-control input-sm" type="text" placeholder="Name" ng-model="newName"/>
 
-					<button id="name-button" type="submit" class="btn btn-sm btn-default">Set Name</button>
+					<button id="name-button" type="submit" class="btn btn-sm btn-default" ng-disabled="notInit">Set Name</button>
 
-					<button id="host-button" type="button" class="btn btn-sm btn-default" ng-disabled="host">Become Host</button>
+					<button id="host-button" type="button" class="btn btn-sm btn-default" ng-disabled="cantBecomeHost" ng-click="claimHost()">Become Host</button>
+
+					<button id="unhost-button" type="button" class="btn btn-sm btn-default" ng-disabled="isNotHost" ng-click="freeHost()">Stop Hosting</button>
 				</form>
 			</div>
 		</div>
@@ -40,10 +42,10 @@
 				<div class="col-sm-9" id="game-info-col">
 					<div class="panel panel-primary" id="game-info-panel">
 						<ul id="game-info-list">
-							<li>Host: {{host}}</li>
-							<li>Game started: {{gameStarted}}</li>
-							<li>Secret Hint: {{secretHint}}</li>
-							<li>Questions Remaining: {{questionsLeft}} </li>
+							<li><b>Host:</b> <span ng-bind="host | hostStatus"/></li>
+							<li><b>Game status:</b> <span ng-bind="gameStarted | gameStatus"/></li>
+							<li><b>Secret Topic:</b> <span ng-bind="secretHint | hintStatus"/></li>
+							<li><b>Questions Remaining:</b> <span ng-bind="questionsLeft"/></li>
 						</ul>
 					</div>
 				</div>
@@ -59,18 +61,23 @@
 
 			</div>
 
-			<div class="panel panel-primary" id="questions-panel">
-				<span class="glyphicon glyphicon-ok"></span>
+			<!--<span class="glyphicon glyphicon-ok"></span>
 				<span class="glyphicon glyphicon-remove"></span>
-				<span class="glyphicon glyphicon-trash"></span>
+				<span class="glyphicon glyphicon-trash"></span> -->
+
+			<div class="panel panel-primary" id="questions-panel">
+				<ul id="pending-questions-list">
+					<li ng-repeat="qst in questionsList | isAnswered:false">
+					</li>
+				</ul>
 			</div>
 
 			<form class="form-group" ng-submit="sendQuestion()">
 				<div class="input-group">
 					<span class="input-group-addon">Question:</span>
-					<input type="text" class="form-control" ng-model="newQuestion" ng-disabled="FALSE">
+					<input type="text" class="form-control" ng-model="newQuestion" ng-disabled="cantAskQuestions">
 					<span class="input-group-btn">
-						<button class="btn btn-primary" type="button" ng-disabled="FALSE">Ask</button>
+						<button class="btn btn-primary" type="button" ng-disabled="cantAskQuestions">Ask</button>
 					</span>
 				</div>
 			</form>
@@ -81,15 +88,15 @@
 			<div class="well" id="chat-panel">
 				<ul id="chat-line-list">
 					<li ng-repeat="message in messages track by $index">
-						<{{message.user}}> {{message.text}}
+						<b ng-bind="message.user"></b>: <span ng-bind="message.text"/>
 					</li>
 				</ul>
 			</div>
 
 			<div class="form-inline" id="chat-control">
-				<form ng-submit="sendMessage()">
+				<form ng-submit="sendMessage()" ng-disable="cantChat">
 					<input type="text" class="form-control" id="chat-text-input" placeholder="Message" ng-model="message">
-					<button type="submit" class="btn btn-primary" id="chat-button">Chat</button>
+					<button type="submit" class="btn btn-primary" id="chat-button" ng-disabled="notInit">Chat</button>
 				</form>
 			</div>			
 		</div>

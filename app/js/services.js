@@ -25,6 +25,14 @@ service('gameService', function (socket) {
 			}
 		},
 
+		setAll: function (data) {
+			host = data.host;
+			gameStarted = data.gameStarted;
+			secretHint = data.secretHint;
+			questionList = data.questionList;
+			questionsLeft = data.questionsLeft;
+		},
+
 		getHost: function () { return host; },
 		getGameStarted: function () { return gameStarted; },
 		getSecretHint: function () { return secretHint; },
@@ -34,6 +42,14 @@ service('gameService', function (socket) {
 
 		changeHost: function (hostName) { 
 			host = hostName; 
+		},
+
+		setHint: function (hint) {
+			secretHint = hint;
+		},
+
+		setSecret: function (secret) {
+			secretObject = secret;
 		},
 
 		addQuestion: function (question) { 
