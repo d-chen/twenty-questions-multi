@@ -289,8 +289,8 @@ module.exports = function (socket) {
 				name: name
 			 };
 
-			socket.emit('freeHost', dataObj);
-			socket.broadcast.emit('freeHost', dataObj);
+			socket.emit('resetGame', dataObj);
+			socket.broadcast.emit('resetGame', dataObj);
 		}
 	});
 
