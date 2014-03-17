@@ -125,6 +125,11 @@ var gameState = function () {
 		}
 	};
 
+	// rename host
+	var renameHost = function (name){
+		host = name;
+	};
+
 	// free ownership of host
 	var freeHost = function () {
 		host = '';
@@ -143,25 +148,27 @@ var gameState = function () {
 		};
 
 		questionList.push(newQ);
-		questionsLeft -= 1;
 		return newQ;
 	};
 
-	var answerQuestion = function (qid, answer) {
+	var answerQuestion = function (data) {
 		var i;
 		for (i = 0; i < questionList.length; i++){
-			if (questionList[i] === qid){
-				questionList[i].answer = answer;
+			if (questionList[i].id === data.id){
+				questionList[i].answer = data.answer;
 				questionList[i].isAnswered = true;
+				questionsLeft -= 1;
+
+				console.log('Question answered');
 				return;
 			}
 		}
 	};
 
-	var deleteQuestion = function (qid) {
+	var deleteQuestion = function (data) {
 		var i;
 		for (i = 0; i < questionList.length; i++){
-			if (questionList[i].id === qid){
+			if (questionList[i].id === data.id){
 				questionList.splice(i, 1);
 			}
 		}
@@ -172,6 +179,7 @@ var gameState = function () {
 		getHost: getHost,
 		claimHost: claimHost,
 		freeHost: freeHost,
+		renameHost: renameHost,
 		startGame: startGame,
 		endGame: endGame,
 		resetGame: resetGame,
@@ -240,6 +248,10 @@ module.exports = function (socket) {
 
 			name = data.name;
 
+			if (gameState.getHost() === oldName){
+				gameState.renameHost(data.name);
+			}
+
 			socket.broadcast.emit('changeName', {
 				oldName: oldName,
 				newName: name
@@ -305,7 +317,7 @@ module.exports = function (socket) {
 
 	socket.on('answerQuestion', function (data) {
 		if (name === gameState.getHost()){
-			gameState.answerQuestion(data.id, data.answer);
+			gameState.answerQuestion(data);
 
 			socket.broadcast.emit('answerQuestion', data);
 		}
@@ -313,7 +325,7 @@ module.exports = function (socket) {
 
 	socket.on('deleteQuestion', function (data) {
 		if (name === gameState.getHost()){
-			gameState.deleteQuestion(data.id);
+			gameState.deleteQuestion(data);
 
 			socket.broadcast.emit('deleteQuestion', data);
 		}

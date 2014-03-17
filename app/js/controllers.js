@@ -16,9 +16,11 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		$scope.host = newVal.host;
 		$scope.gameStarted = newVal.gameStarted;
 		$scope.secretHint = newVal.secretHint;
-		$scope.questionsList = newVal.questionsList;
+		$scope.questionList = newVal.questionList;
 		$scope.questionsLeft = newVal.questionsLeft;
 		$scope.secretObject = newVal.secretObject;
+
+		console.log($scope.questionList);
 
 		// Values to disable buttons
 		$scope.hostExists = $scope.host ? true : false;
@@ -69,7 +71,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
   	socket.on('changeHost', function (data) {
   		gameService.changeHost(data.name);
-  		pushMessage('Server', data.name + ' has become the game host.');
+  		pushMessage('Server', data.name + ' is the game host.');
   	});
 
   	socket.on('freeHost', function (data) {
@@ -97,17 +99,17 @@ controller('AppCtrl', function ($scope, socket, gameService) {
   	});
 
   	socket.on('answerQuestion', function (data) {
-  		var questionObj = gameService.answerQuestion(data.id, data.answer);
+  		gameService.answerQuestion(data);
 
-  		var host = gameService.getHost();
   		var response = data.answer ? "YES" : "NO";
-  		var text = response + " to '" + questionObj.question + "'";
-
-  		pushMessage(host, text);
+  		pushMessage('Server', $scope.host + " answered " + response + " to '" + data.question + "'");
   	});
 
   	socket.on('deleteQuestion', function (data) {
-  		gameService.deleteQuestion(data.id);
+  		gameService.deleteQuestion(data);
+
+  		var deleteMsg = " Please reformat question to be answered with 'Yes/No'.";
+		pushMessage('Server', $scope.host + " ignored '" + data.question + "'." + deleteMsg);
   	});
 
   	/* Helper functions */
@@ -125,6 +127,11 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 			if ($scope.users[i] === oldName) {
 				$scope.users[i] = newName;
 				pushMessage('Server', oldName + ' is now known as ' + newName + '.');
+
+				// change host as well
+				if ($scope.host === oldName){
+					gameService.changeHost(newName);
+				}
 				break;
 			}
 		}
@@ -165,8 +172,12 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 			if (!result) {
 				alert('Error: Name is already in use.');
 			} else {
-				changeName($scope.name, $scope.newName);
+				// change host as well
+				if ($scope.host === $scope.name){
+					gameService.changeHost($scope.newName);
+				}
 
+				changeName($scope.name, $scope.newName);
 				$scope.name = $scope.newName;
 			}
 		})
@@ -200,21 +211,26 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		$scope.newQuestion = '';
 	};
 
-	$scope.answerQuestion = function (qid, ans) {
+	$scope.answerQuestion = function (qid, qst, ans) {
 		var answerObj = {
 			id: qid,
+			question: qst,
 			answer: ans
 		};
 
 		gameService.answerQuestion(answerObj);
-
 		socket.emit('answerQuestion', answerObj);
+
+  		var response = ans ? "YES" : "NO";
+  		pushMessage('Server', $scope.host + " answered " + response + " to '" + qst + "'");
 	};
 
-	$scope.deleteQuestion = function (qid) {
-		gameService.deleteQuestion(qid);
+	$scope.deleteQuestion = function (qid, qst) {
+		gameService.deleteQuestion({ id: qid});
 
-		socket.emit('deleteQuestion', { id: qid });
+		var deleteMsg = " Please reformat question to be answered with 'Yes/No'.";
+		pushMessage('Server', $scope.host + " ignored '" + qst + "'." + deleteMsg);
+		socket.emit('deleteQuestion', { id: qid, question: qst });
 	};
 
 	$scope.claimHost = function () {
@@ -235,6 +251,8 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 			secretHint: $scope.newSecretHint,
 			secretObject: $scope.newSecretObject
 		};
+		$scope.newSecretHint = '';
+		$scope.newSecretObject = '';
 
 		gameService.startGame(data);
 		pushMessage('Server', 'Game has started. The topic is: "' + data.secretHint + '"');

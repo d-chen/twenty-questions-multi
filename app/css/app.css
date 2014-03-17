@@ -11,7 +11,7 @@ body {
 
 li {
 	word-wrap: break-word;
-	font-size: 1.1em;
+	font-size: 1em;
 }
 
 .container {
@@ -25,15 +25,21 @@ li {
 	padding: 0;
 }
 
+.table {
+	table-layout: fixed;
+	overflow-y: auto;
+}
+
 .panel {
 	width: 100%;
+	overflow-y: auto;
 }
 
 .panel-primary {
 	background-color: #2C3E50;
 }
 
-.panel-primary li, .panel-primary p, .panel-primary span {
+tr, th, td, .panel-primary li, .panel-primary span {
 	color: #ffffff;
 }
 
@@ -69,7 +75,7 @@ li {
 }
 
 #host-panel {
-	overflow: auto;
+	/*overflow: auto;*/
 }
 
 #host-controls {
@@ -83,8 +89,12 @@ li {
 	margin-bottom: 5px;
 }
 
+#host-controls input {
+	width: 140px;
+}
+
 #host-controls button {
-	width: 110px;
+	width: 100px;
 }
 
 #game-info-list {
@@ -112,8 +122,9 @@ li {
 	text-align: center;
 }
 
-#questions-panel {
-	height: calc(100% - 185px);
+.questions-panel {
+	/*height: calc(100% - 185px);*/
+	height: calc(50% - 95px);
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
@@ -139,7 +150,7 @@ li {
 	width: 100%;
 	padding: .1em;
 	list-style-type: none;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 #chat-line-list > li {

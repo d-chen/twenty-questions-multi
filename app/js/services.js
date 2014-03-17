@@ -75,11 +75,11 @@ service('gameService', function (socket) {
 			questionList.push(question); 
 		},
 
-		answerQuestion: function (qid, ans) {
+		answerQuestion: function (data) {
 			var i;
 			for (i = 0; i < questionList.length; i++){
-				if (questionList[i].id === qid){
-					questionList[i].answer = ans;
+				if (questionList[i].id === data.id){
+					questionList[i].answer = data.answer;
 					questionList[i].isAnswered = true;
 
 					questionsLeft -= 1;
@@ -88,10 +88,10 @@ service('gameService', function (socket) {
 			}
 		},
 
-		deleteQuestion: function (qid) {
+		deleteQuestion: function (data) {
 			var i;
 			for (i = 0; i < questionList.length; i++){
-				if (questionList[i].id === qid){
+				if (questionList[i].id === data.id){
 					questionList.splice(i, 1);
 					return;
 				}

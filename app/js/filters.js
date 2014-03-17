@@ -29,6 +29,11 @@ appFilters.filter('hintStatus', function() {
 	}
 });
 
+appFilters.filter('yesOrNo', function() {
+	return function (answer){
+		return (answer) ? "Yes" : "No";
+	}
+});
 
 appFilters.filter('isAnswered', function() {
 	return function (questArr, answered){
