@@ -116,12 +116,6 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
 	// rename user within user list
 	var changeName = function (oldName, newName) {
-		if (newName.length > MAX_NAME_LENGTH){
-			var text = 'Please choose a shorter name. Limit: ' + MAX_NAME_LENGTH + ' characters';
-			alert(text);
-			return;
-		}
-
 		var i;
 		for (i = 0; i < $scope.users.length; i++){
 			if ($scope.users[i] === oldName) {
@@ -166,6 +160,12 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	/* Methods available to scope */
 
 	$scope.changeName = function () {
+		if ($scope.newName.length > MAX_NAME_LENGTH){
+			var text = 'Please choose a shorter name. Limit: ' + MAX_NAME_LENGTH + ' characters';
+			alert(text);
+			return;
+		}
+
 		socket.emit('changeName', {
 			name: $scope.newName
 		}, function (result){
