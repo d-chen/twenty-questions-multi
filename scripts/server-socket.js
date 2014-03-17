@@ -1,62 +1,55 @@
 var userNames = function () {
 
+	// Private members
 	var MAX_NAME_LENGTH = 15;
-
-	// true values for names that already exist
-	var names = {};
+	var names = {}; // true values for names that already exist
 	var nextGuestId = 1;
 
-	// return all names as an array
-	var getNames = function () {
-		var ret = [];
 
-		for (user in names){
-			ret.push(user);
-		}
-
-		return ret;
-	};
-
-	// claim ownership of name
-	// returns false if name is already claimed
-	var claim = function (name) {
-		if (!name || name === 'server' || names[name]){
-			return false;
-		} else {
-			names[name] = true;
-			return true;
-		}
-	};
-
-	// forfeit ownership of name
-	var free = function (name) {
-		if (names[name]){
-			delete names[name];
-		}
-	};
-
-	// create default name for new user
-	var getGuestName = function () {
-		var name;
-
-		do {
-			name = 'Guest ' + nextGuestId;
-			nextGuestId += 1;
-		} while (!claim(name));
-
-		return name;
-	}
-
-	// encapsulate names by assigning result of calling functions
-	// to userNames instead
 	return {
-		getNames: getNames,
-		claim: claim,
-		free: free,
-		getGuestName: getGuestName
-	};
+		// Public members
 
+		// return all names as an array
+		getNames: function () {
+			var ret = [];
 
+			for (user in names){
+				ret.push(user);
+			}
+
+			return ret;
+		},
+
+		// claim ownership of name
+		// returns false if name is already claimed
+		claim: function (name) {
+			if (!name || name === 'server' || names[name]){
+				return false;
+			} else {
+				names[name] = true;
+				return true;
+			}
+		},
+
+		// forfeit ownership of name
+		free: function (name) {
+			if (names[name]){
+				delete names[name];
+			}
+		},
+
+		// create default name for new user
+		getGuestName: function () {
+			var name;
+
+			do {
+				name = 'Guest ' + nextGuestId;
+				nextGuestId += 1;
+			} while (!userNames.claim(name));
+
+			return name;
+		}
+	}
 }( );
 
 
@@ -71,123 +64,106 @@ var gameState = function () {
 	var nextQuestionId = 1;
 
 
-	// return game data to send to new users
-	// or at the start of the game
-	var getGame = function () {
-		return {
-			host: host,
-			gameStarted: gameStarted,
-			secretHint: secretHint,
-			questionList: questionList,
-			questionsLeft: questionsLeft
-		};
-	};
-
-	var getHost = function () {
-		return host;
-	};
-
-	// host sends hint and secret object to begin game
-	var startGame = function (hint, object) {
-		secretHint = hint;
-		secretObject = object;
-		gameStarted = true;
-	};
-
-	// reset game state when host ends game manually or game finishes
-	var endGame = function () {
-		gameStarted = false;
-		secretHint = '';
-		secretObject = '';
-		questionList = [];
-		questionsLeft = 20;
-		nextQuestionId = 1;
-	};
-
-	// reset game state when host disconnects
-	var resetGame = function () {
-		host = '';
-		gameStarted = false;
-		secretHint = '';
-		secretObject = '';
-		questionList = [];
-		questionsLeft = 20;
-		nextQuestionId = 1;
-	};
-
-	// claim host position; return false if already occupied
-	var claimHost = function (name) {
-		if (!host){
-			host = name;
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	// rename host
-	var renameHost = function (name){
-		host = name;
-	};
-
-	// free ownership of host
-	var freeHost = function () {
-		host = '';
-	};
-
-	// create question in server's copy of game
-	var addQuestion = function (user, question) {
-		var qid = nextQuestionId;
-		nextQuestionId += 1;
-
-		var newQ = {
-			id: qid,
-			user: user,
-			question: question,
-			isAnswered: false
-		};
-
-		questionList.push(newQ);
-		return newQ;
-	};
-
-	var answerQuestion = function (data) {
-		var i;
-		for (i = 0; i < questionList.length; i++){
-			if (questionList[i].id === data.id){
-				questionList[i].answer = data.answer;
-				questionList[i].isAnswered = true;
-				questionsLeft -= 1;
-
-				console.log('Question answered');
-				return;
-			}
-		}
-	};
-
-	var deleteQuestion = function (data) {
-		var i;
-		for (i = 0; i < questionList.length; i++){
-			if (questionList[i].id === data.id){
-				questionList.splice(i, 1);
-			}
-		}
-	};
-
 	return {
-		getGame: getGame,
-		getHost: getHost,
-		claimHost: claimHost,
-		freeHost: freeHost,
-		renameHost: renameHost,
-		startGame: startGame,
-		endGame: endGame,
-		resetGame: resetGame,
-		addQuestion: addQuestion,
-		answerQuestion: answerQuestion,
-		deleteQuestion: deleteQuestion
-	};
+		// return game data to send to new users or at the start of the game
+		getGame: function () {
+			return {
+				host: host,
+				gameStarted: gameStarted,
+				secretHint: secretHint,
+				questionList: questionList,
+				questionsLeft: questionsLeft
+			};
+		},
 
+		getHost: function () {
+			return host;
+		},
+
+		// host sends hint and secret object to begin game
+		startGame: function (hint, object) {
+			secretHint = hint;
+			secretObject = object;
+			gameStarted = true;
+		},
+
+		// reset game state when host ends game manually
+		endGame: function () {
+			gameStarted = false;
+			secretHint = '';
+			secretObject = '';
+			questionList = [];
+			questionsLeft = 20;
+			nextQuestionId = 1;
+		},
+
+		// reset game state when host disconnects
+		resetGame: function () {
+			host = '';
+			gameStarted = false;
+			secretHint = '';
+			secretObject = '';
+			questionList = [];
+			questionsLeft = 20;
+			nextQuestionId = 1;
+		},
+
+		// claim host position; return false if already occupied
+		claimHost: function (name) {
+			if (!host){
+				host = name;
+				return true;
+			} else {
+				return false;
+			}
+		},
+
+		// rename host
+		renameHost: function (name){
+			host = name;
+		},
+
+		// create question in server's copy of game
+		addQuestion: function (user, question) {
+			var qid = nextQuestionId;
+			nextQuestionId += 1;
+
+			var newQ = {
+				id: qid,
+				user: user,
+				question: question,
+				isAnswered: false
+			};
+
+			questionList.push(newQ);
+			return newQ;
+		},
+
+
+		answerQuestion: function (data) {
+			var i;
+			for (i = 0; i < questionList.length; i++){
+				if (questionList[i].id === data.id){
+					questionList[i].answer = data.answer;
+					questionList[i].isAnswered = true;
+					questionsLeft -= 1;
+
+					console.log('Question answered');
+					return;
+				}
+			}
+		},
+
+		deleteQuestion: function (data) {
+			var i;
+			for (i = 0; i < questionList.length; i++){
+				if (questionList[i].id === data.id){
+					questionList.splice(i, 1);
+				}
+			}
+		}
+
+	}
 }( );
 
 module.exports = function (socket) {
@@ -223,7 +199,7 @@ module.exports = function (socket) {
 				gameState.resetGame();
 				socket.broadcast.emit('resetGame', {name: name});
 			} else {
-				gameState.freeHost();
+				gameState.renameHost('');
 				socket.broadcast.emit('freeHost', {name: name});
 			}
 		}
@@ -283,14 +259,19 @@ module.exports = function (socket) {
 
 	socket.on('freeHost', function (data) {
 		if (name === gameState.getHost()){
-			gameState.freeHost();
+			gameState.renameHost('');
 
 			var dataObj = { 
 				name: name
 			 };
 
-			socket.emit('resetGame', dataObj);
-			socket.broadcast.emit('resetGame', dataObj);
+			var socketEvent = 'freeHost';
+			if (gameState.getGame().gameStarted === true){
+				socketEvent = 'resetGame';
+			}
+
+			socket.emit(socketEvent, dataObj);
+			socket.broadcast.emit(socketEvent, dataObj);
 		}
 	});
 

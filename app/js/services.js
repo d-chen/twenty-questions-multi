@@ -40,7 +40,7 @@ service('gameService', function (socket) {
 			if (data.secretObject){ secretObject = data.secretObject; }
 		},
 
-		// used when host prematurely ends game or game finishes
+		// used when host ends game
 		endGame: function () {
 			gameStarted = false;
 			secretHint = '';
