@@ -91,7 +91,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
   	socket.on('resetGame', function (data) {
   		gameService.resetGame();
-  		pushMessage('Server', data.name + ' has disconnected. Game reset.');
+  		pushMessage('Server', data.name + ' has stopped hosting. Game reset.');
   	});
 
   	socket.on('addQuestion', function (data) {
