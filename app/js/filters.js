@@ -4,13 +4,6 @@
 
 var appFilters = angular.module('myApp.filters', []);
 
-appFilters.filter('interpolate', ['version', function(version) {
-	return function(text) {
-		return String(text).replace(/\%VERSION\%/mg, version);
-    }
-  }]);
-
-
 appFilters.filter('hostStatus', function() {
 	return function (name){
 		return (name) ? name : "<No Current Host>";
