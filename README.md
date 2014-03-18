@@ -23,6 +23,6 @@ Access the app at `localhost:5000`
 
 Testing
 -------
-Run Karma tests:
+Run Karma/Jasmine tests:
 
 	./scripts/test.sh
