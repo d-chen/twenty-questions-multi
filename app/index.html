@@ -25,7 +25,7 @@
 
 				<form class="navbar-form navbar-right" ng-submit="changeName()">
 					<input id="name-input" class="form-control input-sm" type="text" placeholder="Name" ng-model="newName"/>
-					<button id="name-button" type="submit" class="btn btn-sm btn-default" ng-disabled="notInit">Set Name</button>
+					<button id="name-button" type="submit" class="btn btn-sm btn-default" ng-disabled="notInit" autocomplete="off">Set Name</button>
 					<button id="host-button" type="button" class="btn btn-sm btn-default" ng-disabled="cantBecomeHost" ng-click="claimHost()">Become Host</button>
 					<button id="unhost-button" type="button" class="btn btn-sm btn-default" ng-disabled="isNotHost" ng-click="freeHost()">Stop Hosting</button>
 				</form>
@@ -42,7 +42,7 @@
 						<li><b>Host:</b> <span ng-bind="host | hostStatus"/></li>
 						<li><b>Game status:</b> <span ng-bind="gameStarted | gameStatus"/></li>
 						<li><b>Secret Topic:</b> <span ng-bind="secretHint | hintStatus"/></li>
-						<li ng-hide="isNotHost"><b>Secret Subject:</b> <span ng-bind="secretObject" /></li>
+						<li ng-hide="isNotHost"><b>Hidden Answer:</b> <span ng-bind="secretObject" /></li>
 						<li><b>Questions Remaining:</b> <span ng-bind="questionsLeft"/></li>
 					</ul>
 
@@ -52,7 +52,7 @@
 						<button class="btn btn-default" type='button' ng-hide="isNotHost" ng-disabled="cantSetSecret" ng-click="startGame()">Start Game</button>
 					</form>
 					<form class="form-group"> 
-						<input type="text" ng-model="newSecretObject" ng-hide="isNotHost" ng-disabled="cantSetSecret" placeholder="Secret Subject">
+						<input type="text" ng-model="newSecretObject" ng-hide="isNotHost" ng-disabled="cantSetSecret" placeholder="Hidden Answer">
 						<button class="btn btn-default" type='button' ng-hide="isNotHost" ng-disabled="!gameStarted" ng-click="endGame()">End Game</button>
 					</form>
 					</div>
@@ -134,7 +134,7 @@
 			<form class="form-group" ng-submit="sendQuestion()">
 				<div class="input-group">
 					<span class="input-group-addon"><b>{{questionsLeft}}</b> Questions Remaining: </span>
-					<input type="text" class="form-control" ng-model="newQuestion" ng-disabled="cantAskQuestions">
+					<input type="text" class="form-control" ng-model="newQuestion" ng-disabled="cantAskQuestions" autocomplete="off">
 					<span class="input-group-btn">
 						<button class="btn btn-primary" type="submit" ng-disabled="cantAskQuestions">Ask</button>
 					</span>
@@ -155,7 +155,7 @@
 
 			<div class="form-inline" id="chat-control">
 				<form ng-submit="sendMessage()" ng-disable="cantChat">
-					<input type="text" class="form-control" id="chat-text-input" placeholder="Message" ng-model="message">
+					<input type="text" class="form-control" id="chat-text-input" placeholder="Message" ng-model="message" autocomplete="off">
 					<button type="submit" class="btn btn-primary" id="chat-button" ng-disabled="notInit">Chat</button>
 				</form>
 			</div>			
