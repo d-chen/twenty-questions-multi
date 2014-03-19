@@ -85,7 +85,7 @@ service('gameService', function (socket) {
 					questionList[i].isAnswered = true;
 
 					questionsLeft -= 1;
-					return questionList[i];
+					return (questionsLeft === 0);
 				}
 			}
 		},

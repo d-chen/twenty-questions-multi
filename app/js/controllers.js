@@ -218,11 +218,15 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 			answer: ans
 		};
 
-		gameService.answerQuestion(answerObj);
+		var shouldEndGame = gameService.answerQuestion(answerObj);
 		socket.emit('answerQuestion', answerObj);
 
   		var response = ans ? "YES" : "NO";
   		pushMessage('Server', $scope.host + " answered " + response + " to '" + qst + "'");
+
+  		if (shouldEndGame){
+  			$scope.endGame();
+  		}
 	};
 
 	$scope.deleteQuestion = function (qid, qst) {
