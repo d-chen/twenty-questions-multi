@@ -87,6 +87,7 @@ var gameState = function () {
 			gameStarted = true;
 			questionList = [];
 			questionsLeft = 20;
+			nextQuestionId = 1;
 		},
 
 		// reset game state when host ends game manually
@@ -145,7 +146,7 @@ var gameState = function () {
 		answerQuestion: function (data) {
 			var i;
 			for (i = 0; i < questionList.length; i++){
-				if (questionList[i].id === data.id){
+				if (questionList[i].id === data.id && questionList[i].isAnswered == false){
 					questionList[i].answer = data.answer;
 					questionList[i].isAnswered = true;
 					questionsLeft -= 1;
