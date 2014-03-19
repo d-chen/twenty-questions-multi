@@ -154,9 +154,13 @@
 			</div>
 
 			<div class="form-inline" id="chat-control">
-				<form ng-submit="sendMessage()" ng-disable="cantChat">
+				<form class="form-group" ng-submit="sendMessage()" ng-disable="cantChat">
+					<div class="input-group">
 					<input type="text" class="form-control" id="chat-text-input" placeholder="Message" ng-model="message" autocomplete="off">
-					<button type="submit" class="btn btn-primary" id="chat-button" ng-disabled="notInit">Chat</button>
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-primary" id="chat-button" ng-disabled="notInit">Chat</button>
+					</span>
+					</div>
 				</form>
 			</div>			
 		</div>

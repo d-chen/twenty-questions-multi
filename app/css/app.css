@@ -153,12 +153,3 @@ tr, th, td, .panel-primary li, .panel-primary span {
 #chat-line-list > li {
 	margin: .1em;
 }
-
-#chat-text-input {
-	width: calc(100% - 70px);
-}
-
-#chat-button {
-	width: 65px;
-	float: right;
-}
