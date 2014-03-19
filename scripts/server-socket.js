@@ -85,6 +85,8 @@ var gameState = function () {
 			secretHint = hint;
 			secretObject = object;
 			gameStarted = true;
+			questionList = [];
+			questionsLeft = 20;
 		},
 
 		// reset game state when host ends game manually

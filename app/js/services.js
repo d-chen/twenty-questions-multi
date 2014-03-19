@@ -37,6 +37,8 @@ service('gameService', function (socket) {
 		startGame: function (data) {
 			gameStarted = true;
 			secretHint = data.secretHint;
+			questionList = [];
+			questionsLeft = 20;
 			if (data.secretObject){ secretObject = data.secretObject; }
 		},
 
