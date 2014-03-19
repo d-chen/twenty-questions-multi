@@ -150,7 +150,7 @@ var gameState = function () {
 					questionList[i].isAnswered = true;
 					questionsLeft -= 1;
 
-					console.log('Question answered');
+					console.log('Question answered. #' + questionsLeft);
 					return;
 				}
 			}
