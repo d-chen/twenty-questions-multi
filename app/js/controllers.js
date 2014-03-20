@@ -58,61 +58,61 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		$scope.users.push(data.name);
 	});
 
-  	socket.on('userLeft', function (data) {
-  		var i, user;
-  		for (i = 0; i < $scope.users.length; i++) {
-  			user = $scope.users[i];
-  			if (user === data.name) {
-  				$scope.users.splice(i, 1);
-  				break;
-  			}
-  		}
-  	});
+	socket.on('userLeft', function (data) {
+		var i, user;
+		for (i = 0; i < $scope.users.length; i++) {
+			user = $scope.users[i];
+			if (user === data.name) {
+				$scope.users.splice(i, 1);
+				break;
+			}
+		}
+	});
 
-  	socket.on('changeHost', function (data) {
-  		gameService.changeHost(data.name);
-  		pushMessage('Server', data.name + ' is the game host.');
-  	});
+	socket.on('changeHost', function (data) {
+		gameService.changeHost(data.name);
+		pushMessage('Server', data.name + ' is the game host.');
+	});
 
-  	socket.on('freeHost', function (data) {
-  		gameService.changeHost('');
-  		pushMessage('Server', data.name + ' has stopped hosting.');
-  	});
+	socket.on('freeHost', function (data) {
+		gameService.changeHost('');
+		pushMessage('Server', data.name + ' has stopped hosting.');
+	});
 
-  	socket.on('startGame', function (data) {
-  		gameService.startGame(data);
-  		pushMessage('Server', 'Game has started. The topic is: "' + data.secretHint + '"');
-  	});
+	socket.on('startGame', function (data) {
+		gameService.startGame(data);
+		pushMessage('Server', 'Game has started. The topic is: "' + data.secretHint + '"');
+	});
 
-  	socket.on('endGame', function (data) {
-  		pushMessage('Server', 'Game ended. The answer was "' + data.secretObject + '"');
-  		gameService.endGame();
-  	});
+	socket.on('endGame', function (data) {
+		pushMessage('Server', 'Game ended. The answer was "' + data.secretObject + '"');
+		gameService.endGame();
+	});
 
-  	socket.on('resetGame', function (data) {
-  		gameService.resetGame();
-  		pushMessage('Server', data.name + ' has stopped hosting. Game reset.');
-  	});
+	socket.on('resetGame', function (data) {
+		gameService.resetGame();
+		pushMessage('Server', data.name + ' has stopped hosting. Game reset.');
+	});
 
-  	socket.on('addQuestion', function (data) {
-  		gameService.addQuestion(data);
-  	});
+	socket.on('addQuestion', function (data) {
+		gameService.addQuestion(data);
+	});
 
-  	socket.on('answerQuestion', function (data) {
-  		gameService.answerQuestion(data);
+	socket.on('answerQuestion', function (data) {
+		gameService.answerQuestion(data);
 
-  		var response = data.answer ? "YES" : "NO";
-  		pushMessage('Server', $scope.host + " answered " + response + " to '" + data.question + "'");
-  	});
+		var response = data.answer ? "YES" : "NO";
+		pushMessage('Server', $scope.host + " answered " + response + " to '" + data.question + "'");
+	});
 
-  	socket.on('deleteQuestion', function (data) {
-  		gameService.deleteQuestion(data);
+	socket.on('deleteQuestion', function (data) {
+		gameService.deleteQuestion(data);
 
-  		var deleteMsg = " Please reformat question to be answered with 'Yes/No'.";
+		var deleteMsg = " Please reformat question to be answered with 'Yes/No'.";
 		pushMessage('Server', $scope.host + " ignored '" + data.question + "'." + deleteMsg);
-  	});
+	});
 
-  	/* Helper functions */
+	/* Helper functions */
 
 	// rename user within user list
 	var changeName = function (oldName, newName) {
@@ -180,7 +180,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 				changeName($scope.name, $scope.newName);
 				$scope.name = $scope.newName;
 			}
-		})
+		});
 	};
 
 	$scope.sendMessage = function () {
@@ -221,12 +221,12 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		var shouldEndGame = gameService.answerQuestion(answerObj);
 		socket.emit('answerQuestion', answerObj);
 
-  		var response = ans ? "YES" : "NO";
-  		pushMessage('Server', $scope.host + " answered " + response + " to '" + qst + "'");
+		var response = ans ? "YES" : "NO";
+		pushMessage('Server', $scope.host + " answered " + response + " to '" + qst + "'");
 
-  		if (shouldEndGame){
-  			$scope.endGame();
-  		}
+		if (shouldEndGame){
+			$scope.endGame();
+		}
 	};
 
 	$scope.deleteQuestion = function (qid, qst) {

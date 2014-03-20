@@ -13,8 +13,11 @@ var userNames = function () {
 		getNames: function () {
 			var ret = [];
 
-			for (user in names){
-				ret.push(user);
+			for (var user in names){
+				// avoid grabbing from prototype
+				if (names.hasOwnProperty(user)){
+					ret.push(user);
+				}
 			}
 
 			return ret;
@@ -23,7 +26,7 @@ var userNames = function () {
 		// claim ownership of name
 		// returns false if name is already claimed
 		claim: function (name) {
-			if (!name || name === 'server' || names[name]){
+			if (!name || name === 'Server' || names[name] || name.length > MAX_NAME_LENGTH){
 				return false;
 			} else {
 				names[name] = true;
@@ -49,7 +52,7 @@ var userNames = function () {
 
 			return name;
 		}
-	}
+	};
 }( );
 
 
@@ -146,7 +149,7 @@ var gameState = function () {
 		answerQuestion: function (data) {
 			var i;
 			for (i = 0; i < questionList.length; i++){
-				if (questionList[i].id === data.id && questionList[i].isAnswered == false){
+				if (questionList[i].id === data.id && questionList[i].isAnswered === false){
 					questionList[i].answer = data.answer;
 					questionList[i].isAnswered = true;
 					questionsLeft -= 1;
@@ -166,7 +169,7 @@ var gameState = function () {
 			}
 		}
 
-	}
+	};
 }( );
 
 module.exports = function (socket) {
@@ -243,8 +246,8 @@ module.exports = function (socket) {
 	});
 
 
-	/* 	Game events 
-	*	Update server state, then broadcast change to users
+	/* Game events 
+	*  Update server state, then broadcast change to users
 	*/
 
 	socket.on('claimHost', function (data, response) {
@@ -266,7 +269,7 @@ module.exports = function (socket) {
 
 			var dataObj = { 
 				name: name
-			 };
+			};
 
 			var socketEvent = 'freeHost';
 			if (gameState.getGame().gameStarted === true){
