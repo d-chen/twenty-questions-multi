@@ -4,7 +4,6 @@
 
 angular.module('myApp.controllers', ['btford.socket-io','myApp.services']).
 controller('AppCtrl', function ($scope, socket, gameService) {
-
 	var MAX_NAME_LENGTH = 15;
 	var MAX_MESSAGE_LENGTH = 120;
 	var MESSAGE_HISTORY = 75;

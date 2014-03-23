@@ -13,15 +13,15 @@ angular.module('myApp', [
   'btford.socket-io'
 ]).
 factory('socket', function (socketFactory) {
-	var mySocket = io.connect('/',{
-		// run multiple clients
-		'force new connection' : true
-	});
+  var mySocket = io.connect('/', {
+    //run multiple clients
+    'force new connection': true
+  });
 
-  	return socketFactory({
-  		ioSocket: mySocket
-  	});
-});
+  return socketFactory({
+    ioSocket: mySocket
+  });
+})
 //.config(['$routeProvider', function($routeProvider) {
   //$routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
   //$routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});

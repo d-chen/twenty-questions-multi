@@ -4,8 +4,8 @@
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('myApp.services', ['btford.socket-io']).
-service('gameService', function (socket) {
+angular.module('myApp.services', []).
+service('gameService', function (){
 	var host = '';
 	var gameStarted = false;
 	var secretHint = '';
