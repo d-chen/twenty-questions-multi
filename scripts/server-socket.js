@@ -79,6 +79,10 @@ var gameState = function () {
 			};
 		},
 
+		getGameStarted: function () {
+			return gameStarted;
+		},
+
 		getHost: function () {
 			return host;
 		},
@@ -303,6 +307,9 @@ module.exports = function (socket) {
 	});
 
 	socket.on('sendQuestion', function (data) {
+		if (gameState.getGameStarted === false){
+			return;
+		}
 		var question = gameState.addQuestion(name, data.question);
 
 		socket.emit('addQuestion', question);

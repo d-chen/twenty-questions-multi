@@ -96,6 +96,9 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	});
 
 	socket.on('addQuestion', function (data) {
+		if ($scope.gameStarted === false){
+			return;
+		}
 		gameService.addQuestion(data);
 	});
 
