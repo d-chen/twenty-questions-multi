@@ -301,7 +301,7 @@ module.exports = function (socket) {
 
 	socket.on('endGame', function (data) {
 		if (name === gameState.getHost()){
-			gameState.endGame();
+			gameState.resetGame();
 			socket.broadcast.emit('endGame', { secretObject: data.secretObject });
 		}
 	});

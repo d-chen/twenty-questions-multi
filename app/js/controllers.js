@@ -87,7 +87,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
 	socket.on('endGame', function (data) {
 		pushMessage('Server', 'Game ended. The answer was "' + data.secretObject + '"');
-		gameService.endGame();
+		gameService.resetGame();
 	});
 
 	socket.on('resetGame', function (data) {
@@ -287,7 +287,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	$scope.endGame = function () {
 		pushMessage('Server', 'Game ended. The answer was "' + $scope.secretObject + '"');
 		socket.emit('endGame', {secretObject: $scope.secretObject});
-		gameService.endGame();
+		gameService.resetGame();
 	};
 
 });
