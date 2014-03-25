@@ -52,6 +52,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	socket.on('changeName', function (data) {
 		changeName(data.oldName, data.newName);
 		renameUserChatHistory(data.oldName, data.newName);
+		renameUserGameHistory(data.oldName, data.newName);
 	});
 
 	socket.on('userJoin', function (data) {
@@ -140,6 +141,15 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 		}
 	};
 
+	// when renaming user, apply changes to question history
+	var renameUserGameHistory = function (oldName, newName) {
+		for (var i = 0; i < $scope.questionList.length; i++){
+			if ($scope.questionList[i].user === oldName){
+				$scope.questionList[i].user = newName;
+			}
+		}
+	};
+
 	// add message to list, prune as needed
 	var pushMessage = function (myUser, myText){
 		$scope.messages.push({
@@ -188,6 +198,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
 				changeName($scope.name, $scope.newName);
 				renameUserChatHistory($scope.name, $scope.newName);
+				renameUserGameHistory($scope.name, $scope.newName);
 				$scope.name = $scope.newName;
 			}
 		});

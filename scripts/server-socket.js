@@ -167,6 +167,15 @@ var gameState = function () {
 					questionList.splice(i, 1);
 				}
 			}
+		},
+
+		// when renaming user, apply changes to question history
+		renameUserGameHistory: function (oldName, newName) {
+			for (var i = 0; i < questionList.length; i++){
+				if (questionList[i].user === oldName){
+					questionList[i].user = newName;
+				}
+			}
 		}
 
 	};
@@ -238,6 +247,8 @@ module.exports = function (socket) {
 				oldName: oldName,
 				newName: name
 			});
+
+			gameState.renameUserGameHistory(oldName, data.name);
 
 			response(true);
 		} else {
