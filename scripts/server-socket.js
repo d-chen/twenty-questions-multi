@@ -83,6 +83,10 @@ var gameState = function () {
 			return host;
 		},
 
+		getSecretObject: function () {
+			return secretObject;
+		},
+
 		// host sends hint and secret object to begin game
 		startGame: function (hint, object) {
 			secretHint = hint;
@@ -93,17 +97,7 @@ var gameState = function () {
 			nextQuestionId = 1;
 		},
 
-		// reset game state when host ends game manually
-		endGame: function () {
-			gameStarted = false;
-			secretHint = '';
-			secretObject = '';
-			questionList = [];
-			questionsLeft = 20;
-			nextQuestionId = 1;
-		},
-
-		// reset game state when host disconnects
+		// reset game state
 		resetGame: function () {
 			host = '';
 			gameStarted = false;
@@ -279,12 +273,14 @@ module.exports = function (socket) {
 			gameState.renameHost('');
 
 			var dataObj = { 
-				name: name
+				name: name,
+				secretObject: gameState.getSecretObject()
 			};
 
 			var socketEvent = 'freeHost';
 			if (gameState.getGame().gameStarted === true){
-				socketEvent = 'resetGame';
+				gameState.resetGame();
+				socketEvent = 'endGame';
 			}
 
 			socket.emit(socketEvent, dataObj);

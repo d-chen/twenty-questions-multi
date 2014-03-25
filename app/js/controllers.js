@@ -91,8 +91,8 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	});
 
 	socket.on('resetGame', function (data) {
+		pushMessage('Server', data.name + ' has stopped hosting. The answer was "' + data.secretObject + '"');
 		gameService.resetGame();
-		pushMessage('Server', data.name + ' has stopped hosting. Game reset.');
 	});
 
 	socket.on('addQuestion', function (data) {

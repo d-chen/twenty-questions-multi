@@ -42,16 +42,7 @@ service('gameService', function (){
 			if (data.secretObject){ secretObject = data.secretObject; }
 		},
 
-		// used when host ends game
-		endGame: function () {
-			gameStarted = false;
-			secretHint = '';
-			secretObject = '';
-			questionList = [];
-			questionsLeft = 20;
-		},
-
-		// used for when host disconnects
+		// used for when game ends
 		resetGame: function () {
 			host = '';
 			gameStarted = false;
