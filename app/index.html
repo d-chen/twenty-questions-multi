@@ -93,8 +93,8 @@
 								<span class="glyphicon glyphicon-ok" style="color:#18BC9C" ng-show="qst.answer"> {{qst.answer | yesOrNo}} </span>
 								<span class="glyphicon glyphicon-remove" style="color:#E74C3C" ng-show="!qst.answer"> {{qst.answer | yesOrNo}} </span>
 								<div class="modifyAnswerBtnGroup">
-								<button class="btn btn-success " type="button" ng-hide="isNotHost" ng-click="answerQuestion(qst.id, qst.question, true)"><span class="glyphicon glyphicon-ok" ></span></button>
-								<button class="btn btn-danger " type="button" ng-hide="isNotHost" ng-click="answerQuestion(qst.id, qst.question, false)"><span class="glyphicon glyphicon-remove" ng-disabled="isNotHost"></span></button>
+								<button class="btn btn-success " type="button" ng-hide="isNotHost" ng-disabled="qst.answer" ng-click="answerQuestion(qst.id, qst.question, true)"><span class="glyphicon glyphicon-ok" ></span></button>
+								<button class="btn btn-danger " type="button" ng-hide="isNotHost" ng-disabled="!qst.answer" ng-click="answerQuestion(qst.id, qst.question, false)"><span class="glyphicon glyphicon-remove" ng-disabled="isNotHost"></span></button>
 								<button class="btn btn-info " type="button" ng-hide="isNotHost" ng-click="deleteQuestion(qst.id, qst.question)"><span class="glyphicon glyphicon-trash" ng-disabled="isNotHost"></span></button>
 								</div>
 							</td>
