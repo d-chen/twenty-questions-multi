@@ -147,12 +147,14 @@ var gameState = function () {
 		answerQuestion: function (data) {
 			var i;
 			for (i = 0; i < questionList.length; i++){
-				if (questionList[i].id === data.id && questionList[i].isAnswered === false){
+				if (questionList[i].id === data.id){
 					questionList[i].answer = data.answer;
-					questionList[i].isAnswered = true;
-					questionsLeft -= 1;
 
-					console.log('Question answered. #' + questionsLeft);
+					if (questionList[i].isAnswered === false){
+						questionList[i].isAnswered = true;
+						questionsLeft -= 1;
+					}
+					
 					return;
 				}
 			}
@@ -162,7 +164,11 @@ var gameState = function () {
 			var i;
 			for (i = 0; i < questionList.length; i++){
 				if (questionList[i].id === data.id){
+					if (questionList[i].isAnswered === true){
+						questionsLeft += 1;
+					}
 					questionList.splice(i, 1);
+					return;
 				}
 			}
 		},

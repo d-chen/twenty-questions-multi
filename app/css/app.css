@@ -14,6 +14,10 @@ li {
 	font-size: 1em;
 }
 
+.modifyAnswerBtnGroup {
+	float: right;
+}
+
 .container {
 	width: 100%;
 }
@@ -41,6 +45,7 @@ li {
 
 tr, th, td, .panel-primary li, .panel-primary span {
 	color: #ffffff;
+	word-wrap: break-word;
 }
 
 #layout {

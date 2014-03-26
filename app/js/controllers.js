@@ -120,8 +120,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 
 	// rename user within user list
 	var changeName = function (oldName, newName) {
-		var i;
-		for (i = 0; i < $scope.users.length; i++){
+		for (var i = 0; i < $scope.users.length; i++){
 			if ($scope.users[i] === oldName) {
 				$scope.users[i] = newName;
 				pushMessage('Server', oldName + ' is now known as ' + newName + '.');
@@ -256,7 +255,7 @@ controller('AppCtrl', function ($scope, socket, gameService) {
 	$scope.deleteQuestion = function (qid, qst) {
 		gameService.deleteQuestion({ id: qid});
 
-		var deleteMsg = " Please reformat question to be answered with 'Yes/No'.";
+		var deleteMsg = " Please ask questions to be answered with 'Yes/No'.";
 		pushMessage('Server', $scope.host + " ignored '" + qst + "'." + deleteMsg);
 		socket.emit('deleteQuestion', { id: qid, question: qst });
 	};
