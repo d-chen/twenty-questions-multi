@@ -1,7 +1,7 @@
 twenty-questions-multi
 ======================
 Web application for playing 20 Questions. 
-Current version hosted at (http://q20.herokuapp.com/)
+Current version hosted at (http://twenty-questions.herokuapp.com/)
 
 Written using Node.js/Express.js, Socket.io, and AngularJS.
 
